@@ -9,8 +9,21 @@ captcha_bp = Blueprint("captcha", __name__)
 @captcha_bp.route("/captcha/generate", methods=["GET"])
 def get_captcha():
     """Generate a new CAPTCHA image - intentionally simplified"""
-    
-    captcha_text = "12345"
+    # make arr of 8
+    captchaArr = []
+    result = ""
+
+    # loops through and populates randomly as a number or a letter
+    for i in range(8):
+	    if random.choice([True, False]):
+		    captchaArr.append(random.randint(0,9))
+	    else:
+		    captchaArr.append(random.choice(string.ascii_letters))
+	    result += str(captchaArr[i])
+
+    # captcha_text = "12345"
+	
+    captcha_text = result
     
     session['captcha_text'] = captcha_text
     
