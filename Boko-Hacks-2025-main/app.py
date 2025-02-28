@@ -18,6 +18,8 @@ from models.admin import Admin
 from models.file import File  
 from sqlalchemy import inspect
 import secrets 
+import requests
+import time
 import os
 
 app = Flask(__name__)
@@ -29,7 +31,7 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 UPLOAD_FOLDER = 'uploads'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024  # 50 MB -- file length 
+app.config['MAX_CONTENT_LENGTH'] = 1024  # 50 MB -- file length 
 
 db.init_app(app)
 
