@@ -45,6 +45,11 @@
         <label for="captcha">Enter CAPTCHA:</label>
         <div class="captcha-box">
           <img src="{{ url_for('captcha.get_captcha') }}" alt="CAPTCHA" class="captcha-image">
+          <style>
+            .captcha-image {
+              transform: skewX(12deg) rotate(5deg);
+            }
+          </style>
         </div>
         <input type="text" id="captcha" name="captcha" placeholder="Enter the text shown above" required>
 
