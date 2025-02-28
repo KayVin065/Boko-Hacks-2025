@@ -35,6 +35,13 @@ app.config['MAX_CONTENT_LENGTH'] = 1024  # 50 MB -- file length
 
 db.init_app(app)
 
+
+@app.after_request
+def add_csp_header(response):
+    response.headers['Content-Security-Policy'] = "default-src 'self'; style-src 'self'; script-src 'self'; img-src *; frame-ancestors 'none';"
+    return response
+
+
 # Register Blueprints
 app.register_blueprint(home_bp)
 app.register_blueprint(hub_bp)

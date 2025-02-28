@@ -1,6 +1,6 @@
-document.getElementById("regButton").addEventListener("click", checkPasswordReq);
 
-function checkPasswordReq() {
+//event passed as a parameter into checkPasswordReq(). addEventListener listens for event in checkPasswordReq().
+document.getElementById("regButton").addEventListener("click", function checkPasswordReq(event) {
     event.preventDefault();
     const password = document.getElementById("password").value;
     const resubPassword = document.getElementById("password2").value;
@@ -25,4 +25,4 @@ function checkPasswordReq() {
         document.querySelector("form").submit();
     }
 
-}
+});
