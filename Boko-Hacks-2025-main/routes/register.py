@@ -5,8 +5,6 @@ import re
 
 register_bp = Blueprint("register", __name__)
 
-
-
 @register_bp.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
@@ -14,6 +12,9 @@ def register():
         password = request.form.get("password")
         captcha_response = request.form.get("captcha")
         stored_captcha = session.get("captcha_text")
+
+        # Debugging print statement for password
+        print(f"Received password: {password}")
 
         if not stored_captcha or captcha_response != stored_captcha:
             flash("Invalid CAPTCHA. Please try again.", "error")
@@ -26,7 +27,7 @@ def register():
             flash("Username already exists. Please choose a different one.", "error")
             return redirect(url_for("register.register"))
         
-        if len(password) < 12 or not re.search(r'[A-Z]', password) or not re.search(r'[a-z]', password) or not re.search(r'[0-9]', password) or not re.search(r'[?%!$;~+=]', password):
+        if len(password) < 12 or not re.search(r'[A-Z]', password) or not re.search(r'[a-z]', password) or not re.search(r'[0-9]', password) or not re.search(r'[!@#$%^&*()_+={}|:,.?/~]', password):
             flash("Password does not meet requirements. Password must be at least 12 characters long, include an uppercase letter, a lowercase letter, a number, and a special character.", "error")
             return redirect(url_for("register.register"))
 
