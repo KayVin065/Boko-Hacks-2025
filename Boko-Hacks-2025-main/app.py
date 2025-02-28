@@ -31,7 +31,7 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 UPLOAD_FOLDER = 'uploads'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-app.config['MAX_CONTENT_LENGTH'] = 1024  # 50 MB -- file length 
+app.config['MAX_CONTENT_LENGTH'] = 1024 * 100 # 100 KB -- file length 
 
 db.init_app(app)
 
