@@ -1,8 +1,11 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for, session
 from models.user import User
 from extensions import db
+import re
 
 register_bp = Blueprint("register", __name__)
+
+
 
 @register_bp.route("/register", methods=["GET", "POST"])
 def register():
@@ -21,6 +24,10 @@ def register():
         existing_user = User.query.filter_by(username=username).first()
         if existing_user:
             flash("Username already exists. Please choose a different one.", "error")
+            return redirect(url_for("register.register"))
+        
+        if len(password) < 12 or not re.search(r'[A-Z]', password) or not re.search(r'[a-z]', password) or not re.search(r'[0-9]', password) or not re.search(r'[?%!$;~+=]', password):
+            flash("Password does not meet requirements. Password must be at least 12 characters long, include an uppercase letter, a lowercase letter, a number, and a special character.", "error")
             return redirect(url_for("register.register"))
 
         new_user = User(username=username)
