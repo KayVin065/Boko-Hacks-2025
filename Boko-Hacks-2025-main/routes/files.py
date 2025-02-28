@@ -11,6 +11,7 @@ ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 UPLOAD_FOLDER = 'uploads'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
+
 files_bp = Blueprint('files', __name__, url_prefix='/apps/files')
 
 def allowed_file(filename):
@@ -97,7 +98,7 @@ def upload_file():
 
 '''
 # Retrieve the VirusTotal API Key from the environment variable
-VIRUS_TOTAL_API_KEY = 'c3dcbdf51206641c26c753275f18e5700092258a25590bd8fbbc6401bfddace3'
+VIRUS_TOTAL_API_KEY = os.getenv("VIRUS_TOTAL_API_KEY")
 VIRUS_TOTAL_URL = "https://www.virustotal.com/api/v3/files/"
 
 files_bp = Blueprint('files', __name__, url_prefix='/apps/files')
@@ -218,7 +219,7 @@ def upload_file():
     except Exception as e:
         print(f"Error saving file: {str(e)}")
         return jsonify({'success': False, 'error': 'File save failed'}), 500
-        '''
+'''        
     
 @files_bp.route('/delete/<int:file_id>', methods=['DELETE'])
 def delete_file(file_id):

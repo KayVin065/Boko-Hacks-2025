@@ -90,7 +90,7 @@ def create_note():
 
 @notes_bp.route('/search')
 def search_notes():
-    """Search notes with intentional SQL injection vulnerability"""
+    """Search notes"""
     if 'user' not in session:
         return jsonify({'success': False, 'error': 'Not logged in'}), 401
         
@@ -100,15 +100,18 @@ def search_notes():
 
     query = request.args.get('q', '')
     print(f"Search query: {query}")
+
+    if not query:
+        return jsonify({'success': False, 'message': 'Search query cannot be empty'}), 200
     
     try:
-        sql = f"SELECT * FROM notes WHERE title LIKE '%{query}%' OR content LIKE '%{query}%'"
+        sql = text("SELECT * FROM notes WHERE title LIKE :query OR content LIKE :query AND user_id = :user_id")
         
         # Log the raw SQL for debugging
         print(f"Executing SQL: {sql}")
         
         # Execute the raw SQL
-        result = db.session.execute(text(sql))
+        result = db.session.execute(sql, {'query': f'%{query}%', 'user_id': current_user.id})
         
         notes = []
         for row in result:
