@@ -21,7 +21,8 @@ import secrets
 import os
 
 app = Flask(__name__)
-app.secret_key = secrets.token_hex(32)  # more secure secret_key
+#app.secret_key = secrets.token_hex(32)  # more secure secret_key
+app.secret_key = "supersecretkey"
 
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///boko_hacks.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False

@@ -12,20 +12,19 @@ def get_captcha():
     # make arr of 8
     captchaArr = []
     result = ""
-
+	
     # loops through and populates randomly as a number or a letter
     for i in range(8):
-	    if random.choice([True, False]):
-		    captchaArr.append(random.randint(0,9))
-	    else:
-		    captchaArr.append(random.choice(string.ascii_letters))
-	    result += str(captchaArr[i])
+        if random.choice([True, False]):
+            captchaArr.append(str(random.randint(0,9)))
+        else:
+            captchaArr.append(random.choice(string.ascii_letters))
+        result += str(captchaArr[i])
 
     # captcha_text = "12345"
-	
     captcha_text = result
     
-    session['captcha_text'] = captcha_text
+    session["captcha_text"] = captcha_text
     
     image = generate_captcha(captcha_text)
     img_io = BytesIO()

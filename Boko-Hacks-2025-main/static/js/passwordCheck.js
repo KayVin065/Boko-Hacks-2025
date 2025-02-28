@@ -1,5 +1,3 @@
-
-
 document.getElementById("regButton").addEventListener("click", checkPasswordReq);
 
 function checkPasswordReq() {
@@ -11,18 +9,20 @@ function checkPasswordReq() {
     const hasLowerCase = /[a-z]/.test(password);
     const hasSym = /[~!@#$%^&*()<>,.?]/.test(password);
     const hasNum = /[\d]/.test(password);
-    let alert = "";
+    let alertMessage = "";
 
     if(password.length < minLength || !hasUpperCase || !hasLowerCase || !hasSym || !hasNum) {
-        alert = "Password does not meet requirements.";
-    } else {
-        this.submit();
+        alertMessage = "Password does not meet required conditions.\n";
     }
 
     if(password !== resubPassword) {
-        alert += "Passwords do not match.";
+        alertMessage += "Passwords do not match.";
     }
 
-    document.getElementById("alertOutput") = alert;
+    if(alertMessage) {
+        alert(alertMessage);
+    } else {
+        document.querySelector("form").submit();
+    }
 
 }
