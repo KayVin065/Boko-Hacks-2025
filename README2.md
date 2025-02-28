@@ -24,19 +24,24 @@ python app.py
 1. Creating a new user:
    - Captcha was updated to include 8 randomized characters that can include a mix of numbers and upper/lowercase letters instead of an unchanging number-based Captcha.
    - Password requirements were set and password verification is now implemented. In order to register a new user, passwords must be at least 12 characters, include at least one uppercase and lowercase letter, a number, and a special character. The password must be re-entered in another text box to verify the chosen password.<br>
+   
 2. Creating a new note:
-   - In the section labeled "Sample Test Inputs" at the bottom of the page, there is an area dedicated to test inputs for notes creation. This is to make your life easier! Feel free to use any other test input to see the newest notes functionality.<br>     
+   - In the section labeled "Sample Test Inputs" at the bottom of the page, there is an area dedicated to test inputs for notes creation. This is to make your life easier! Feel free to use any other test input to see the newest notes functionality.<br>
+        
 3. 401(k) Portal:
-   - Previously, there was a race condition with the contribute processes; if the "Make Contribution" button was pressed several times quickly, the "Personal Funds" amount could become negative since there was nothing in place to ensure the value for amount wasn't being read before it was updated by a previous process. We added a lock to make sure additional processes will wait before reading or altering the amount inside "Personal Funds".<br>     
+   - Previously, there was a race condition with the contribute processes; if the "Make Contribution" button was pressed several times quickly, the "Personal Funds" amount could become negative since there was nothing in place to ensure the value for amount wasn't being read before it was updated by a previous process. We added a lock to make sure additional processes will wait before reading or altering the amount inside "Personal Funds".<br>
+     
 4. Document Upload:
    - The file upload size was unrestricted, so we restricted it to 100 KB.
-   - We implemented virus checking for the file upload, but it doesn't work as intended because of the HTTP status of the web application that we couldn't change. We used VirusTotal to check file insecurity before being saved to the system; malicious files are to be rejected and deleted. Due to the insecure nature of the HTTP connection the files are coming from, VirusTotal will flag any file uploaded as malicious. This makes it difficult to show VirusTotal allowing files to be uploaded. This functionality is currently commented out in files.py to showcase the file upload size restriction, but here are steps to see it/how we were able to use it:     
+   - We implemented virus checking for the file upload, but it doesn't work as intended because of the HTTP status of the web application that we couldn't change. We used VirusTotal to check file insecurity before being saved to the system; malicious files are to be rejected and deleted. Due to the insecure nature of the HTTP connection the files are coming from, VirusTotal will flag any file uploaded as malicious. This makes it difficult to show VirusTotal allowing files to be uploaded. This functionality is currently commented out in files.py to showcase the file upload size restriction, but here are steps to see it/how we were able to use it:
+     
   * Create a VirusTotal account at https://www.virustotal.com/gui/home/upload.
   * Under the top right arrow down, go to API Key. There the API key is availiable.
   * A .gitignore file was created in our project linked to an .env file. Inside the .env file is the "VIRUS_TOTAL_API_KEY = putAPIKeyhere" variable. The API key can be switched out if needed.
   * In the files.py file, we have "VIRUS_TOTAL_API_KEY = os.getenv("VIRUS_TOTAL_API_KEY")" to get the API key. This is part of the commented out code.
   * To uncomment the code and comment out the unused part, add ''' on line 14 and remove the ''' on line 222.
   * Run the web application like normal. When a file is uploaded, you'll see a message claiming VirusTotal has flagged the file as malicious even when it is not due to the HTTP connection.
+    
 # Future Improvements
 - Add multi-factor authentication using an email the user inputs when they first create their account. Due to timing restrictions, we could not implement this, but we had the idea to create a new We have an idea for how this could be implemented, but due to timing restrictions we did not include this in the final program.
 - Use HTTPS instead of HTTP. If this site were to be published, rather than just run off of the localhost, a certificate could be obtained to upgrade the site from HTTP to HTTPS.
