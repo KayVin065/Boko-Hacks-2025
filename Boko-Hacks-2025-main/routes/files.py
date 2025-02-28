@@ -4,7 +4,6 @@ from models.user import User
 from models.file import File
 import os
 from werkzeug.utils import secure_filename
-import pyclamd
 from io import BytesIO
 import requests
 
