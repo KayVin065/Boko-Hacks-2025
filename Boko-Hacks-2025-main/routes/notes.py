@@ -154,7 +154,8 @@ def delete_note(note_id):
 
     try:
         note = Note.query.get(note_id)
-        if not note:
+        #Note's user ID has to match with current user's ID
+        if not note or (note.user_id != current_user.id):
             print(f"Note not found: {note_id}")
             return jsonify({'success': False, 'error': f'Note with ID {note_id} not found'}), 404
         
