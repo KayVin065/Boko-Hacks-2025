@@ -13,7 +13,7 @@ Click here to watch the video!
 # Setup Instructions
 1. Clone the repository:<br>
 https://github.com/bathtub76/hackathon2025.git
-2. Set up git and create virtual environment:
+2. Set up git and create virtual environment:<br>
 cd Boko-Hacks-2025-main<br>
 python -m venv .venv<br>
 .venv\Scripts\activate 
