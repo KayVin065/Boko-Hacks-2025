@@ -9,10 +9,8 @@ def login():
     if request.method == "POST":
         username = request.form.get("username")
         password = request.form.get("password")
-        email = request.form.get("email")
 
         user = User.query.filter_by(username=username).first()
-        # implement duo-authentication here, THEN log in success teehee
         if user and user.check_password(password):
             session["user"] = user.username
             flash("Login successful!", "success")

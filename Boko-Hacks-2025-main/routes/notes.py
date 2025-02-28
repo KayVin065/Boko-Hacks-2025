@@ -4,8 +4,11 @@ from models.user import User
 from models.note import Note
 from datetime import datetime
 from sqlalchemy import text
+import bleach
 
 notes_bp = Blueprint('notes', __name__, url_prefix='/apps/notes')
+ALLOWED_TAGS = ['b', 'i', 'u', 'em', 'strong', 'p', 'br', 'ul', 'li']
+ALLOWED_ATTRIBUTES = {}
 
 @notes_bp.route('/')
 def notes():
@@ -31,7 +34,7 @@ def notes():
 
 @notes_bp.route('/create', methods=['POST'])
 def create_note():
-    """Create a new note - Intentionally vulnerable to XSS"""
+    """Create a new note - Updated code to bleach and limit input"""
     if 'user' not in session:
         return jsonify({'success': False, 'error': 'Not logged in'}), 401
         
@@ -45,12 +48,21 @@ def create_note():
     if not title or not content:
         return jsonify({'success': False, 'error': 'Title and content are required'}), 400
     
+    if len(title) > 150:
+        return jsonify({'success': False, 'error': 'Title is too long (max 150 characters)'}), 400
+    
+    if len(content) > 2000:
+        return jsonify({'success': False, 'error': 'Content is too long (max 2000 characters)'}), 400
+    
     try:
         print(f"Creating note - Title: {title}, Content: {content}")
+
+        bleached_title = bleach.clean(title, tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRIBUTES)
+        bleached_content = bleach.clean(content, tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRIBUTES)
         
         note = Note(
-            title=title,
-            content=content,
+            title=bleached_title,
+            content=bleached_content,
             created_at=datetime.now(),
             user_id=current_user.id
         )
