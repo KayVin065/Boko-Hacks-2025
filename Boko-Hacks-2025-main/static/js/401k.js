@@ -33,6 +33,7 @@ function getBalance() {
 }
 
 function contribute() {
+    
     const amountElement = document.getElementById("amount");
     
     if (!amountElement) {
@@ -75,6 +76,7 @@ function contribute() {
         console.error("Error processing contribution:", err);
         showToast("Contribution failed!", "error");
     });
+
 }
 
 // Add these functions to the 401k.js file in static/js directory

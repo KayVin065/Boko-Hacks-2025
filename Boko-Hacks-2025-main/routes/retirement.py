@@ -3,8 +3,12 @@ from extensions import db
 from models.user import User
 import time
 from sqlalchemy import text
+import threading
 
 retirement_bp = Blueprint("retirement", __name__, url_prefix="/apps/401k")
+
+# create lock so it can be used for contributions later
+user_lock = threading.Lock();
 
 user_accounts = {
     "alice": {"funds": 10000, "401k_balance": 5000},
@@ -35,43 +39,44 @@ def contribute():
     if "user" not in session:
         return jsonify({"error": "Not logged in"}), 401
         
-    data = request.get_json()
-    amount = data.get("amount", 0)
-    
-    username = session["user"]
-    if username not in user_accounts:
-        user_accounts[username] = {"funds": 10000, "401k_balance": 0}
-    
-    user_data = user_accounts[username]
+    with user_lock:
 
-    if amount <= 0:
+        data = request.get_json()
+        amount = data.get("amount", 0)
+    
+        username = session["user"]
+        if username not in user_accounts:
+            user_accounts[username] = {"funds": 10000, "401k_balance": 0}
+    
+        user_data = user_accounts[username]
+
+        if amount <= 0:
+            return jsonify({
+                "message": "Invalid contribution amount!", 
+                "funds": user_data["funds"],
+                "401k_balance": user_data["401k_balance"]
+            }), 400
+    
+        if amount > user_data["funds"]:
+            return jsonify({
+                "message": "Insufficient personal funds for this contribution!", 
+                "funds": user_data["funds"],
+                "401k_balance": user_data["401k_balance"]
+            }), 400
+
+        time.sleep(2)  
+
+        company_match = amount * 0.5
+        total_contribution = amount + company_match
+
+        user_data["funds"] -= amount  # Deduct funds
+        user_data["401k_balance"] += total_contribution  # Add to 401k balance
+
         return jsonify({
-            "message": "Invalid contribution amount!", 
+            "message": f"Contributed ${amount}. Employer matched ${company_match}!",
             "funds": user_data["funds"],
             "401k_balance": user_data["401k_balance"]
-        }), 400
-    
-    if amount > user_data["funds"]:
-        return jsonify({
-            "message": "Insufficient personal funds for this contribution!", 
-            "funds": user_data["funds"],
-            "401k_balance": user_data["401k_balance"]
-        }), 400
-
-
-    time.sleep(2)  
-
-    company_match = amount * 0.5
-    total_contribution = amount + company_match
-
-    user_data["funds"] -= amount  # Deduct funds
-    user_data["401k_balance"] += total_contribution  # Add to 401k balance
-
-    return jsonify({
-        "message": f"Contributed ${amount}. Employer matched ${company_match}!",
-        "funds": user_data["funds"],
-        "401k_balance": user_data["401k_balance"]
-    })
+        })
 
 @retirement_bp.route("/reset", methods=["POST"])
 def reset_account():
