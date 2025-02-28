@@ -32,7 +32,7 @@ python app.py
    - Previously, there was a race condition with the contribute processes; if the "Make Contribution" button was pressed several times quickly, the "Personal Funds" amount could become negative since there was nothing in place to ensure the value for amount wasn't being read before it was updated by a previous process. We added a lock to make sure additional processes will wait before reading or altering the amount inside "Personal Funds".<br>
      
 4. Document Upload:
-   - The file upload size was unrestricted, so we restricted it to 100 KB.
+   - The file upload size was unrestricted, so we restricted it to 100 KB. Realistically, we'd like this to be 50 MB, but for testing purposes, we made it smaller.
    - We implemented virus checking for the file upload, but it doesn't work as intended because of the HTTP status of the web application that we couldn't change. We used VirusTotal to check file insecurity before being saved to the system; malicious files are to be rejected and deleted. Due to the insecure nature of the HTTP connection the files are coming from, VirusTotal will flag any file uploaded as malicious. This makes it difficult to show VirusTotal allowing files to be uploaded. This functionality is currently commented out in files.py to showcase the file upload size restriction, but here are steps to see it/how we were able to use it:
      
   * Create a VirusTotal account at https://www.virustotal.com/gui/home/upload.
@@ -43,11 +43,18 @@ python app.py
   * Run the web application like normal. When a file is uploaded, you'll see a message claiming VirusTotal has flagged the file as malicious even when it is not due to the HTTP connection.
     
 # Future Improvements
-- Add multi-factor authentication using an email the user inputs when they first create their account. Due to timing restrictions, we could not implement this, but we had the idea to create a new We have an idea for how this could be implemented, but due to timing restrictions we did not include this in the final program.
+- Add multi-factor authentication using an email the user inputs when they first create their account. Due to timing restrictions, we could not implement this, but we had the idea to create a new column for the User database. This new column would hold user emails, and after logging into the account, it would take the user to another page for two-factor authentication.
+  
 - Use HTTPS instead of HTTP. If this site were to be published, rather than just run off of the localhost, a certificate could be obtained to upgrade the site from HTTP to HTTPS.
+  
 - The upgrade to HTTPS would also allow the successful integration of VirusTotal into the code. VirusTotal would scan uploaded files for malicious content and delete them if any malware is found inside. However, the HTTP protocol causes files to automatically be flagged as "insecure" and deletes them regardless of the file's content.
-- Implement a better Captcha that either functions as a game for engagement or is harder to read to prevent bots.
-- Increase security for admins. 
+  
+- Implement a better Captcha that either functions as a game for engagement or is harder to read to prevent bots. We attempted to blur it, but the text size made it difficult to read and distinguish characters that looked similar. 
+  
+- Add a Content Security Policy header to restrict inline Javascript and inline CSS. This would help prevent actions like Cross-Site Scripting and Click-jacking. We were able to do this previously, but took it out of the code due to timing restrictions and formatting issues with the CSS.
+  
+- Increase security for admins.
+  
 # Sample Test Inputs
 User Creation:<br>
 Example Passwords:<br>
