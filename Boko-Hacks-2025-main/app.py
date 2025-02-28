@@ -17,16 +17,21 @@ from models.note import Note
 from models.admin import Admin
 from models.file import File  
 from sqlalchemy import inspect
+import secrets 
+import requests
+import time
 import os
 
 app = Flask(__name__)
-app.secret_key = "supersecretkey"
+app.secret_key = secrets.token_hex(32)  # more secure secret_key
 
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///boko_hacks.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 UPLOAD_FOLDER = 'uploads'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+app.config['MAX_CONTENT_LENGTH'] = 1024  # 50 MB -- file length 
 
 db.init_app(app)
 

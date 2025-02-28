@@ -12,7 +12,7 @@ def register():
         captcha_response = request.form.get("captcha")
         stored_captcha = session.get("captcha_text")
 
-        if not stored_captcha or captcha_response.upper() != stored_captcha:
+        if not stored_captcha or captcha_response != stored_captcha:
             flash("Invalid CAPTCHA. Please try again.", "error")
             return redirect(url_for("register.register"))
 
